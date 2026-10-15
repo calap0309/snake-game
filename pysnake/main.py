@@ -57,6 +57,7 @@ async def main():
     while running:
         dt = clock.tick(60) / 1000.0
 
+        tsx = tsy = 0  # touch start coords
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 running = False
@@ -84,6 +85,32 @@ async def main():
                         nxt = (-1, 0)
                     elif e.key in (pygame.K_RIGHT, pygame.K_d) and direction != (-1, 0):
                         nxt = (1, 0)
+            elif e.type == pygame.FINGERDOWN:
+                tsx = e.x * WIDTH
+                tsy = e.y * HEIGHT
+                if state in ("ready", "over"):
+                    start()
+                    state = "playing"
+            elif e.type == pygame.FINGERUP:
+                fx = e.x * WIDTH - tsx
+                fy = e.y * HEIGHT - tsy
+                if abs(fx) < 20 and abs(fy) < 20:
+                    # tap, maybe pause/resume
+                    if state == "playing":
+                        state = "paused"
+                    elif state == "paused":
+                        state = "playing"
+                elif state == "playing":
+                    if abs(fx) > abs(fy):
+                        if fx > 20 and direction != (-1, 0):
+                            nxt = (1, 0)
+                        elif fx < -20 and direction != (1, 0):
+                            nxt = (-1, 0)
+                    else:
+                        if fy > 20 and direction != (0, -1):
+                            nxt = (0, 1)
+                        elif fy < -20 and direction != (0, 1):
+                            nxt = (0, -1)
 
         if state == "playing":
             acc += dt
