@@ -1,23 +1,43 @@
 # Snake 🐍
 
-A tiny, dependency-free Snake game in a single HTML file.
+Snake, in two flavours:
 
-## Play
+- **Python (pygame-ce)** — the main game, compiled to WebAssembly with
+  [pygbag](https://pygame-web.github.io/) so it runs in the browser.
+- **JavaScript** — a dependency-free single-file version.
 
-Open `snake.html` in any modern browser — no build step, no server needed.
+## Play in the browser (Python, via WebAssembly)
 
-Or serve it locally:
+**https://calap0309.github.io/snake-game/**
+
+This is the real pygame game running in your browser — Python 3.12 compiled to
+WASM by pygbag. Nothing to install.
+
+## Run the Python version locally
 
 ```bash
-python3 -m http.server 8000
-# then visit http://localhost:8000/snake.html
+python3 -m venv .venv
+./.venv/bin/pip install pygame-ce
+./.venv/bin/python pysnake/main.py
 ```
+
+## Rebuild the web (WASM) version
+
+```bash
+./.venv/bin/pip install pygbag
+./.venv/bin/pygbag --build pysnake
+# output lands in pysnake/build/web/
+```
+
+## JavaScript version
+
+Open `snake-js.html` in any browser, or visit
+`https://calap0309.github.io/snake-game/snake-js.html`.
 
 ## Controls
 
 - **Arrow keys / WASD** — move
-- **P or Space** — pause / resume
+- **P or Space** — pause / resume (also start)
 - **R** — restart
-- **Swipe** — move on touch devices
 
-Speed increases every 5 points. Best score is saved in `localStorage`.
+Speed increases every 5 points.
